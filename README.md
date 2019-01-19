@@ -9,7 +9,7 @@ for msg in test:
     print(msg)
 ```
 
-获取db文件首先手机要root。
+获取db文件首先手机要root
 
 ```
 data\data\com.tencent.mobileqq\databases\你的QQ.db
