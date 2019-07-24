@@ -14,6 +14,10 @@ for msg in test:
 ```
 data\data\com.tencent.mobileqq\databases\你的QQ.db
 ```
+另外我还发现，如果聊天记录过多，会将较早的聊天记录存入以下数据库
+```
+data\data\com.tencent.mobileqq\databases\slowtable_你的QQ.db
+```
 
 yourkey是解密的密钥，一般是手机序列号，拨号键盘下输入*#06#
 
