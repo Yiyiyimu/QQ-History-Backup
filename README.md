@@ -1,10 +1,12 @@
 # qqmessageoutput
 安卓QQ聊天记录导出/安卓QQ数据库解密
 
+[2019-10-02]新增了QQ群的消息记录导出，mode=1是好友，2是群
+
 ```python
-q=QQoutput('yourdb.db','yourkey')
-test=q.message(yourfriendqq)
-q.output(yourfriendqq)
+q=QQoutput('yourdb.db','yourkey',mode)
+test=q.message(yourfriendqq,mode)
+q.output(yourfriendqq,mode)
 for msg in test:
     print(msg)
 ```

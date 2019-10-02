@@ -30,11 +30,22 @@ class QQoutput():
             except:
                 str=NULL
             return str         
-    
-    def message(self,num):
+    def troop_message(self,num):
         num=str(num).encode('utf-8')
         md5num=hashlib.md5(num).hexdigest().upper()
-        execute="select msgData,senderuin,time from mr_friend_{md5num}_New".format(md5num=md5num)
+        execute="select msgData,senderuin,time from mr_troop_{md5num}_New".format(md5num=md5num)
+    def message(self,num,mode):
+        #mode=1 friend
+        #mode=2 troop
+        num=str(num).encode('utf-8')
+        md5num=hashlib.md5(num).hexdigest().upper()
+        if(mode==1):
+            execute="select msgData,senderuin,time from mr_friend_{md5num}_New".format(md5num=md5num)
+        elif(mode==2):
+            execute="select msgData,senderuin,time from mr_troop_{md5num}_New".format(md5num=md5num)
+        else:
+            print("error mode")
+            exit(1)
         cursor = self.c.execute(execute)
         allmsg=[]
         for row in cursor:
@@ -53,11 +64,11 @@ class QQoutput():
             allmsg.append(amsg)
         return allmsg    
             
-    def output(self,num):
+    def output(self,num,mode):
         file=str(num)+".html"
         f2 = open(file,'w',encoding="utf-8")
         f2.write("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>")
-        allmsg=self.message(num)
+        allmsg=self.message(num,mode)
         for msg in allmsg:
             try:
                 f2.write("<font color=\"blue\">")
@@ -68,5 +79,4 @@ class QQoutput():
                 f2.write(msg[2])
                 f2.write("</br></br>")               
             except:
-                pass    
-   
+                pass
