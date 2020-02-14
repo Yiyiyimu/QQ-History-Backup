@@ -50,10 +50,6 @@ class QQoutput():
             if(pos == lastpos):
                 break
         return msg
-    def troop_message(self,num):
-        num=str(num).encode("utf-8")
-        md5num=hashlib.md5(num).hexdigest().upper()
-        execute="select msgData,senderuin,time from mr_troop_{md5num}_New".format(md5num=md5num)
     def message(self,num,mode):
         #mode=1 friend
         #mode=2 troop
@@ -67,7 +63,8 @@ class QQoutput():
             print("error mode")
             exit(1)
         cursor = self.c.execute(execute)
-        RealKey = self.decode(cursor)
+        if(self.s != "" and len(self.s)>=5):
+            self.key = self.decode(cursor)
         cursor = self.c.execute(execute)
         allmsg=[]
         for row in cursor:
@@ -85,7 +82,10 @@ class QQoutput():
             amsg.append(msg)
             allmsg.append(amsg)
         return allmsg    
-    def output(self,num,mode):
+    def output(self,num,mode,n1,n2):
+        first = str(num)[0]
+        name2 = n1 if n1 != "" else "我"
+        name1 = n2 if n2 != "" else str(num)
         file=str(num)+".html"
         f2 = open(file,"w",encoding="utf-8")
         f2.write("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>")
@@ -93,44 +93,33 @@ class QQoutput():
         f2.write("<div style='white-space: pre-line'>")
         for msg in allmsg:
             try:
-                if(msg[1][0]=="5"):
+                if(msg[1][0]==first):
+                    f2.write("<p align='left'>")
+                    f2.write("<font color=\"blue\"><b>")
+                    f2.write(name2)
+                    f2.write("</b></font>-----<font color=\"green\">")
+                    f2.write(msg[0])
+                    f2.write("</font></br>")
+                else:
                     f2.write("<p align='right'>")
                     f2.write("<font color=\"green\">")
                     f2.write(msg[0])                    
                     f2.write("</font>-----<font color=\"blue\"><b>")
-                    f2.write("1")
+                    f2.write(name1)
                     f2.write("</font></b></br>")
-                else:
-                    f2.write("<p align='left'>")
-                    f2.write("<font color=\"blue\"><b>")
-                    f2.write("2")
-                    f2.write("</b></font>-----<font color=\"green\">")
-                    f2.write(msg[0])
-                    f2.write("</font></br>")
                 f2.write(self.AddEmoji(msg[2]))
                 f2.write("</br></br>")
                 f2.write("</p>")               
             except:
                 pass
-        f2.write("</div")
+        f2.write("</div>")
+        return self.key
 
-try:
-    mode = 1
-    
-    '''
-    yourfriendqq = 584740257
-    db = "C:/Users/30857/Desktop/qq/308571034.db"
-    key = "361910168361910168"
-    s = "还是在试表情"
-    '''
-    q=QQoutput(db,key,mode,s)
-    msg=q.message(yourfriendqq,mode)
-    q.output(yourfriendqq,mode)
-    #for line in msg[0:5]:
-    #    print(line)
-except Exception as e:
-    print("###########################")
-    print("Exception:", e)
-    print("###########################")
+def main(db, qq, key, msg, n1, n2):
+    try:
+        mode = 1
+        q=QQoutput(db,key,mode,msg)
+        return q.output(qq, mode, n1, n2)
 
-input("Press enter to close the window")
+    except Exception as e:
+        return "Exception:" + e
