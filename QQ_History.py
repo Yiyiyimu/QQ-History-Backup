@@ -105,8 +105,8 @@ class QQoutput():
         return allmsg    
     def output(self,num,mode,n1,n2):
         first = str(num)[0]
-        name2 = n1 if n1 != "" else "我"
-        name1 = n2 if n2 != "" else str(num)
+        name1 = n1 if n1 != "" else "我"
+        name2 = n2 if n2 != "" else str(num)
         file=str(num)+".html"
         f2 = open(file,"w",encoding="utf-8")
         f2.write("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>")

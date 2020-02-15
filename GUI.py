@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import filedialog
 import tkinter.ttk as ttk
+from icon import img
+import base64
 import QQ_History
+import os
 
 def Enter():
     db, qq, key, msg, n1, n2 = e1.get(), e2.get(), e3.get(), e4.get(), e5.get(), e6.get()
@@ -24,11 +27,17 @@ def SelectPath():
 
 root = tk.Tk()
 pathGet, keyGet, info = tk.StringVar(), tk.StringVar(), tk.StringVar()
-#pathGet.set("C:/Users/30857/Desktop/qq/308571034.db")
+#pathGet.set("C:/Users/30857/Desktop/qq/584740257.db")
 #keyGet.set("361910168361910168")
-#"584740257"
+#"308571034"
+#找到包了，就在司机这儿
 
-root.iconbitmap("qq.ico")
+tmp = open("tmp.ico","wb+")
+tmp.write(base64.b64decode(img))
+tmp.close()
+root.iconbitmap("tmp.ico")
+os.remove("tmp.ico")
+
 root.title("QQ聊天记录导出")
 
 ttk.Label(root, text = "*db文件地址：").grid(row = 0, column = 0, sticky = "e")
