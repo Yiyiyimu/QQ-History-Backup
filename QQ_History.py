@@ -36,9 +36,27 @@ class QQoutput():
             continue
         data = row[0]
         MsgEnc = self.s.encode(encoding="utf-8")
-        RealKey = ""
+        KeySet = ""
         for i in range(0,len(MsgEnc)):
-            RealKey+=chr(data[i]^MsgEnc[i])
+            KeySet+=chr(data[i]^MsgEnc[i])
+        #TO AVOID LOOP
+        RealKey, restKey = "", ""
+        for i in range(4, len(KeySet)):
+            '''
+            bug WARNING!!
+            Assuming Key should be longer than 5 digits
+            To Prevent string loop in single key
+            Like "121212456"
+            '''
+            RealKey, nextKey, restKey = KeySet[0:i], KeySet[i:2*i], KeySet[2*i:len(KeySet)]
+            KeyLen = len(RealKey)
+            flagLoop = True
+            for j in range(KeyLen):
+                if((j < len(nextKey) and RealKey[j] != nextKey[j]) or (j < len(restKey) and RealKey[j] != restKey[j])):
+                    flagLoop = False
+                    break
+            if(flagLoop and j == KeyLen-1):
+                break
         return RealKey
     def AddEmoji(self, msg):
         pos = msg.find('\x14')
@@ -62,7 +80,10 @@ class QQoutput():
         else:
             print("error mode")
             exit(1)
-        cursor = self.c.execute(execute)
+        try:
+            cursor = self.c.execute(execute)
+        except:
+            raise ValueError("QQ号/db地址错误")
         if(self.s != "" and len(self.s)>=5):
             self.key = self.decode(cursor)
         cursor = self.c.execute(execute)
@@ -116,10 +137,6 @@ class QQoutput():
         return self.key
 
 def main(db, qq, key, msg, n1, n2):
-    try:
-        mode = 1
-        q=QQoutput(db,key,mode,msg)
-        return q.output(qq, mode, n1, n2)
-
-    except Exception as e:
-        return "Exception:" + e
+    mode = 1
+    q=QQoutput(db,key,mode,msg)
+    return q.output(qq, mode, n1, n2)

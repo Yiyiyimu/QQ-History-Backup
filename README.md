@@ -1,28 +1,31 @@
-# qqmessageoutput
-安卓QQ聊天记录导出/安卓QQ数据库解密
+# QQ聊天记录导出
 
-[2019-10-02]新增了QQ群的消息记录导出，mode=1是好友，2是群
+## 简介
 
-```python
-q=QQoutput('yourdb.db','yourkey',mode)
-test=q.message(yourfriendqq,mode)
-q.output(yourfriendqq,mode)
-for msg in test:
-    print(msg)
-```
+本项目 fork 自大佬的项目[roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput) 在此非常感谢
 
-获取db文件首先手机要root
+在之前版本的基础上完成了原作者提到的无需密钥解密的方法，添加了QQ表情的一并导出，并制作了GUI方便使用
+
+## 获取db文件方法
+
+如果root了，直接在
 
 ```
-data\data\com.tencent.mobileqq\databases\你的QQ.db
-```
-另外我还发现，如果聊天记录过多，会将较早的聊天记录存入以下数据库
-```
-data\data\com.tencent.mobileqq\databases\slowtable_你的QQ.db
+data\data\com.tencent.mobileqq\databases\你的QQ.db 和 slowtable_你的QQ.db
 ```
 
-yourkey是解密的密钥，一般是手机序列号，拨号键盘下输入*#06#
+就可以找到
 
-手机QQ的db文件加密方式是异或加密，如果找不到自己的key可以反向破解
+
+
+如果没有root，可以通过手机自带的备份工具备份整个QQ软件，具体方法可以参见
+
+> > 怎样导出手机中的QQ聊天记录？ - 益新软件的回答 - 知乎
+>
+> > https://www.zhihu.com/question/28574047/answer/964813560
+> >
+> > ## GUI使用方法
+> >
+> > 
 
 

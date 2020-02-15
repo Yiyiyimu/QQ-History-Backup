@@ -9,10 +9,11 @@ def Enter():
         info.set("信息不完整！")
         return()
     info.set("开始导出")
-    realkey = QQ_History.main(db, qq, key, msg, n1, n2)
-    if(realkey[0] == "E"):
-        info.set(realkey)
-        return()
+    try:
+        realkey = QQ_History.main(db, qq, key, msg, n1, n2)
+    except Exception as e:
+        info.set(repr(e))
+        return()        
     if(key == ""):
         keyGet.set(realkey)
     info.set("完成")
@@ -43,7 +44,7 @@ ttk.Label(root, text = "手机识别码：").grid(row = 2, column = 0, sticky = 
 e3 = ttk.Entry(root, textvariable = keyGet)
 e3.grid(row = 2, column = 1, columnspan = 3, sticky = "ew", pady = 3)
 
-ttk.Label(root, text = "最后一次聊天记录\n（至少五个汉字）").grid(row = 3, column = 0, sticky = "e")
+ttk.Label(root, text = "最后一次聊天记录\n（至少六个汉字）").grid(row = 3, column = 0, sticky = "e")
 e4 = ttk.Entry(root)
 e4.grid(row = 3, column = 1, columnspan = 3, sticky = "ew", pady = 3)
 
