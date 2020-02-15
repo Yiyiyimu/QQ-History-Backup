@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import filedialog
 import tkinter.ttk as ttk
-from icon import img
+from icon import ico, github_mark
 import base64
 import QQ_History
 import os
+import webbrowser
 
 def Enter():
     db, qq, key, msg, n1, n2 = e1.get(), e2.get(), e3.get(), e4.get(), e5.get(), e6.get()
@@ -25,15 +26,14 @@ def SelectPath():
     pathTmp = filedialog.askopenfilename()
     pathGet.set(pathTmp)
 
+def url():
+    webbrowser.open_new("https://github.com/Yiyiyimu/QQ_History_Backup")
+
 root = tk.Tk()
 pathGet, keyGet, info = tk.StringVar(), tk.StringVar(), tk.StringVar()
-#pathGet.set("C:/Users/30857/Desktop/qq/584740257.db")
-#keyGet.set("361910168361910168")
-#"308571034"
-#找到包了，就在司机这儿
 
 tmp = open("tmp.ico","wb+")
-tmp.write(base64.b64decode(img))
+tmp.write(base64.b64decode(ico))
 tmp.close()
 root.iconbitmap("tmp.ico")
 os.remove("tmp.ico")
@@ -70,9 +70,13 @@ ttk.Button(root, text = "确认", command = Enter).grid(row = 6, column = 1)
 l1 = ttk.Label(root, textvariable = info)
 l1.grid(row = 7, column = 1)
 
-root.mainloop()
+tmp = open("tmp.png","wb+")
+tmp.write(base64.b64decode(github_mark))
+tmp.close()
+github = tk.PhotoImage(file = 'tmp.png')
+os.remove("tmp.png")
 
-'''
-import os
-os.chdir("C:\\Users\\30857\\Desktop\\QQ_History")
-'''
+button_img = tk.Button(root, image = github, text = 'b', command = url, bd = 0)
+button_img.grid(row = 6, rowspan = 7, column = 0,sticky = "ws")
+
+root.mainloop()
