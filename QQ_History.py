@@ -2,6 +2,7 @@ from _overlapped import NULL
 import hashlib
 import sqlite3
 import time
+import traceback
 
 class QQoutput():
     def __init__(self,db,key,mode,s):
@@ -80,10 +81,10 @@ class QQoutput():
         else:
             print("error mode")
             exit(1)
-        try:
-            cursor = self.c.execute(execute)
-        except:
-            raise ValueError("QQ号/db地址错误")
+        #try:
+        cursor = self.c.execute(execute)
+        #except:
+        #    raise ValueError("QQ号/db地址错误")
         if(self.s != "" and len(self.s)>=5):
             self.key = self.decode(cursor)
         cursor = self.c.execute(execute)
@@ -137,6 +138,17 @@ class QQoutput():
         return self.key
 
 def main(db, qq, key, msg, n1, n2):
-    mode = 1
-    q=QQoutput(db,key,mode,msg)
-    return q.output(qq, mode, n1, n2)
+    try:
+        mode = 1
+        q=QQoutput(db,key,mode,msg)
+        return q.output(qq, mode, n1, n2)
+    except Exception as e:
+        with open('log.txt', 'w') as f:
+            f.write(str(e))
+            f.write(traceback.format_exc())
+
+        err_info = repr(e).split(":")[0] == "OperationalError('no such table"
+        print(err_info)
+        print(repr(e).split(":")[0])
+        if(err_info):
+            raise ValueError("QQ号/db地址错误")

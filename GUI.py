@@ -80,3 +80,5 @@ button_img = tk.Button(root, image = github, text = 'b', command = url, bd = 0)
 button_img.grid(row = 6, rowspan = 7, column = 0,sticky = "ws")
 
 root.mainloop()
+
+## pyinstaller -F -w -i icon.ico GUI.py
