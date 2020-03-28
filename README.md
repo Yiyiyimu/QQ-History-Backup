@@ -1,6 +1,6 @@
 # QQ聊天记录导出
 
-可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v1.1/QQ_History_Backup-v1.1.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1pMWxipBNiqirwETiy5-6Ww)(4phv) ，可直接运行。
+可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v1.2/QQ_History_Backup-v1.2.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1apGh_d6lN5swJZ_tH-_fxg)(vpj9) ，可直接运行。
 
 ## 简介
 
@@ -45,3 +45,5 @@ db文件地址（必填）：选择对应的 qq号.db ，如果不全再选择sl
 为了方便离线查看，qq表情gif选择保存在本地，注意移动聊天记录的时候需要同时移动gif文件
 
 ![screenshot](./img/screenshot.png)
+
+有bug的话记得附上log.txt里的内容
