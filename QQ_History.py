@@ -38,6 +38,7 @@ class QQoutput():
         data = row[0]
         MsgEnc = self.s.encode(encoding="utf-8")
         KeySet = ""
+        #for i in range(0,min(len(MsgEnc), len(data))):
         for i in range(0,len(MsgEnc)):
             KeySet+=chr(data[i]^MsgEnc[i])
         #TO AVOID LOOP
@@ -85,12 +86,14 @@ class QQoutput():
         cursor = self.c.execute(execute)
         #except:
         #    raise ValueError("QQ号/db地址错误")
-        if(self.s != "" and len(self.s)>=5):
+        if(self.key == "" and len(self.s)>=5):
             self.key = self.decode(cursor)
         cursor = self.c.execute(execute)
         allmsg=[]
         for row in cursor:
             msgdata= row[0]
+            if(not msgdata):
+                continue
             uin=row[1]
             ltime=time.localtime(row[2])
             
@@ -152,3 +155,10 @@ def main(db, qq, key, msg, n1, n2):
         print(repr(e).split(":")[0])
         if(err_info):
             raise ValueError("QQ号/db地址错误")
+'''
+db = "C:/Users/30857/Desktop/QQ_History/slowtable_2289785930.db"
+qq = "1962662168"
+key = "02:00:00:00:00:00"
+msg = "不用回这条消息"
+main(db, qq, key, msg, "", "")
+'''

@@ -1,0 +1,10 @@
+*.txt
+*.db
+*.html
+*.db-shm
+*.db-wal
+*.zip
+*.spec
+build/
+dist/
+__pycache__/
