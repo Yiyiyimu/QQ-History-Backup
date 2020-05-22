@@ -1,6 +1,6 @@
 # QQ聊天记录导出
 
-可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v1.2/QQ_History_Backup-v1.2.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1apGh_d6lN5swJZ_tH-_fxg)(vpj9) ，可直接运行。
+可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v1.3/QQ_History_Backup-v1.3.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1b1zthkDugXFvNJO87yuYsw)(vejz) ，可直接运行。
 
 ## 简介
 
@@ -31,12 +31,11 @@ data\data\com.tencent.mobileqq\databases\你的QQ.db 和 slowtable_你的QQ.db
 db文件地址（必填）：选择对应的 qq号.db ，如果不全再选择slowtable_qq号.db
 
 对方QQ号（必填）
+  
+手机识别码（待自动填入，供slowtable使用）：
+Android Q及以上（19年以后的系统）限制了id获取权限，无法使用手机识别码（IMEI/MEID）作为聊天记录数据库的密钥，只能通过最后一次聊天记录计算key。在导出slowtable里的内容时默认使用前一步输出的手机识别码作为密钥。
 
-手机识别码（二选一填入/Android Q+ 失效，不推荐）：  
-理论上是用手机识别码（IMEI/MEID）作为聊天记录数据库的密钥，获取方法为在电话界面输入“*#06#”。  
-在Android Q及以上限制了id获取权限，只能通过最后一次聊天记录计算key。在导出slowtable里的内容时可以使用前一步输出的手机识别码作为密钥。
-
-最后一次聊天记录（二选一填入，**推荐**）：  
+最后一次聊天记录（非slowtable**必填**）：  
 因为测试所用两部手机密钥分别为9位和14位，一个汉字对应三个utf-8码，为了避免更长的密钥推荐使用至少六个汉字符号。可以在导出之前给对方发一句话过去。
 
 我的名字（选填）：默认为“我”，填入进行替换
