@@ -131,20 +131,28 @@ class QQoutput():
         f2.write("<div style='white-space: pre-line'>")
         for msg in allmsg:
             try:
-                if (msg[1][0] == first):
+                if mode == 1:
+                    if (msg[1][0] == first):
+                        f2.write("<p align='left'>")
+                        f2.write("<font color=\"blue\"><b>")
+                        f2.write(name2)
+                        f2.write("</b></font>-----<font color=\"green\">")
+                        f2.write(msg[0])
+                        f2.write("</font></br>")
+                    else:
+                        f2.write("<p align='right'>")
+                        f2.write("<font color=\"green\">")
+                        f2.write(msg[0])
+                        f2.write("</font>-----<font color=\"blue\"><b>")
+                        f2.write(name1)
+                        f2.write("</font></b></br>")
+                else:
                     f2.write("<p align='left'>")
                     f2.write("<font color=\"blue\"><b>")
-                    f2.write(name2)
+                    f2.write(msg[1])
                     f2.write("</b></font>-----<font color=\"green\">")
                     f2.write(msg[0])
                     f2.write("</font></br>")
-                else:
-                    f2.write("<p align='right'>")
-                    f2.write("<font color=\"green\">")
-                    f2.write(msg[0])
-                    f2.write("</font>-----<font color=\"blue\"><b>")
-                    f2.write(name1)
-                    f2.write("</font></b></br>")
                 f2.write(self.AddEmoji(msg[2]))
                 f2.write("</br></br>")
                 f2.write("</p>")
@@ -154,9 +162,8 @@ class QQoutput():
         return self.key
 
 
-def main(db, qq, key, msg, n1, n2):
+def main(db, qq, key, msg, n1, n2, mode):
     try:
-        mode = 1
         q = QQoutput(db, key, mode, msg)
         return q.output(qq, mode, n1, n2)
     except Exception as e:
@@ -166,15 +173,17 @@ def main(db, qq, key, msg, n1, n2):
 
         err_info = repr(e).split(":")[0] == "OperationalError('no such table"
         print(err_info)
-        print(repr(e).split(":")[0])
+        print(repr(e))
         if (err_info):
-            raise ValueError("QQ号/db地址错误")
+            raise ValueError("QQ号/私聊群聊选择/db地址/错误")
+
 
 
 '''
-db = "C:/Users/30857/Desktop/QQ_History/slowtable_2289785930.db"
-qq = "1962662168"
-key = "02:00:00:00:00:00"
-msg = "不用回这条消息"
-main(db, qq, key, msg, "", "")
+TODO: 
+1. use com.tencent.mobileqq/f/kc as key
+2. decode friend/troop name, to use in result
+3. add desensitization data to create e2e test
+4. add Makefile, to run build/test
+5. use pic in mobile folder, to better present result
 '''

@@ -11,12 +11,13 @@ import webbrowser
 def Enter():
     db, qq, key, msg, n1, n2 = e1.get(), e2.get(), e3.get(), e4.get(), e5.get(
     ), e6.get()
+    group = 1 if e7.get() == '私聊' else 2
     if (db == "" or qq == "" or (key == "" and msg == "")):
         info.set("信息不完整！")
         return ()
     info.set("开始导出")
     try:
-        realkey = QQ_History.main(db, qq, key, msg, n1, n2)
+        realkey = QQ_History.main(db, qq, key, msg, n1, n2, group)
     except Exception as e:
         info.set(repr(e))
         return ()
@@ -69,9 +70,15 @@ ttk.Label(root, text="对方名字：").grid(row=5, column=0, sticky="e")
 e6 = ttk.Entry(root)
 e6.grid(row=5, column=1, columnspan=3, sticky="ew", pady=3)
 
+ttk.Label(root, text="私聊/群聊：").grid(row=6, column=0, sticky="e")
+e7 = ttk.Combobox(root)
+e7['values'] = ('私聊', '群聊')
+e7.current(0)
+e7.grid(row=6, column=1, columnspan=3, sticky="ew", pady=3)
+
 root.grid_columnconfigure(2, weight=1)
 
-ttk.Button(root, text="确认", command=Enter).grid(row=6, column=1)
+ttk.Button(root, text="确认", command=Enter).grid(row=7, column=1)
 l1 = ttk.Label(root, textvariable=info)
 l1.grid(row=7, column=1)
 
