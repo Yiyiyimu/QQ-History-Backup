@@ -1,6 +1,6 @@
 # QQ聊天记录导出
 
-可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v1.4/QQ_History_Backup-v1.4.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1wIo_xkXiUr3OB_pEwauIPg)(g5jg) ，可直接运行。
+可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v1.41/QQ_History_Backup-v1.41.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1FRcqKiYho-DoDU-RC_uRkw)(sqhc) ，可直接运行。
 
 ## 简介
 
