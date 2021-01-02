@@ -4,7 +4,7 @@
 
 ## 简介
 
-本项目 fork 自大佬的项目[roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput) 在此非常感谢
+本项目 fork 自大佬的项目[roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput) 在此非常感谢。因为改动较多不再作为 fork 分支开发
 
 在之前版本的基础上完成了原作者提到的无需密钥解密的方法，添加了QQ表情的一并导出，并制作了GUI方便使用
 
@@ -42,6 +42,8 @@ Android Q及以上（19年以后的系统）限制了id获取权限，无法使�
 
 对方名字（选填）：默认为对方QQ号，填入进行替换
 
+私聊/群聊
+
 ## 输出截图
 
 为了方便离线查看，qq表情gif选择保存在本地，注意移动聊天记录的时候需要同时移动gif文件
@@ -49,3 +51,11 @@ Android Q及以上（19年以后的系统）限制了id获取权限，无法使�
 ![screenshot](./img/screenshot.png)
 
 有bug的话记得附上log.txt里的内容
+
+## TODO
+- [x] support troop message output
+- [ ] use com.tencent.mobileqq/f/kc as key
+- [ ] decode friend/troop name, to use in result
+- [ ] add desensitization data to create e2e test
+- [ ] add Makefile, to run build/test
+- [ ] use pic in mobile folder, to better present result
