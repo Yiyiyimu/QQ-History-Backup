@@ -7,12 +7,15 @@ import traceback
 
 
 class QQoutput():
-    def __init__(self, dir, qq_self, qq_oppo, mode):
-        self.key = get_key(dir)  # 解密用的密钥
-        db = os.path.join(dir, "db", qq_self + ".db")
-        self.c = sqlite3.connect(db).cursor()
+    def __init__(self, dir, qq_self, qq, mode):
+        self.dir = dir
+        self.key = self.get_key()  # 解密用的密钥
+        db = os.path.join(dir, "databases", qq_self + ".db")
+        self.c1 = sqlite3.connect(db).cursor()
+        db = os.path.join(dir, "databases", "slowtable_" + qq_self + ".db")
+        self.c2 = sqlite3.connect(db).cursor()
         self.qq_self = qq_self
-        self.qq = qq_oppo
+        self.qq = qq
         self.mode = mode
         self.num_to_name = {}
 
@@ -22,9 +25,9 @@ class QQoutput():
             try:
                 for i in range(0, len(data)):
                     msg += bytes([data[i] ^ ord(self.key[i % len(self.key)])])
+                return msg.decode(encoding="utf-8")
             except:
-                msg = NULL
-            return msg.decode(encoding="utf-8")
+                return NULL
         elif type(data) == str:
             msg = ""
             try:
@@ -54,42 +57,67 @@ class QQoutput():
         num = self.qq.encode("utf-8")
         md5num = hashlib.md5(num).hexdigest().upper()
         if (self.mode == 1):
-            execute = "select msgData,senderuin,time from mr_friend_{md5num}_New".format(
+            cmd = "select msgData,senderuin,time from mr_friend_{md5num}_New".format(
                 md5num=md5num)
+            self.get_friends()
         else:
-            execute = "select msgData,senderuin,time from mr_troop_{md5num}_New".format(
+            cmd = "select msgData,senderuin,time from mr_troop_{md5num}_New".format(
                 md5num=md5num)
+            self.get_troop_members()
 
-        cursor = self.c.execute(execute)
+        cursors = self.fill_cursors(cmd)
         allmsg = []
-        for row in cursor:
-            msgdata = row[0]
-            if (not msgdata):
-                continue
-            uin = row[1]
-            ltime = time.localtime(row[2])
+        for cs in cursors:
+            for row in cs:
+                msgdata = row[0]
+                if (not msgdata):
+                    continue
+                uin = row[1]
+                ltime = time.localtime(row[2])
+                sendtime = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
 
-            sendtime = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
-
-            amsg = []
-            amsg.append(sendtime)
-            amsg.append(self.decrypt(uin))
-            amsg.append(self.decrypt(msgdata))
-            allmsg.append(amsg)
+                amsg = []
+                amsg.append(sendtime)
+                amsg.append(self.decrypt(uin))
+                amsg.append(self.decrypt(msgdata))
+                allmsg.append(amsg)
         return allmsg
 
-    def get_name(self):
-        exe = "select uin,remark from Friends"
-        cursor = self.c.execute(exe)
-        for row in cursor:
-            num = self.decrypt(row[0])
-            name = self.decrypt(row[1])
-            self.num_to_name[num] = name
+    def get_friends(self):
+        cmd = "SELECT uin, remark FROM Friends"
+        cursors = self.fill_cursors(cmd)
+        for cs in cursors:
+            for row in cs:
+                num = self.decrypt(row[0])
+                name = self.decrypt(row[1])
+                self.num_to_name[num] = name
+
+    def get_troop_members(self):
+        cmd = "SELECT troopuin, memberuin, friendnick, troopnick FROM TroopMemberInfo"
+        cursors = self.fill_cursors(cmd)
+        for cs in cursors:
+            for row in cs:
+                if(self.decrypt(row[0]) != self.qq):
+                    continue
+                num = self.decrypt(row[1])
+                name = self.decrypt(row[3]) or self.decrypt(row[2])
+                self.num_to_name[num] = name
+
+    def fill_cursors(self, cmd):
+        cursors = []
+        try:
+            cursors.append(self.c2.execute(cmd))
+        except:
+            pass
+        try:
+            cursors.append(self.c1.execute(cmd))
+        except:
+            pass
+        return cursors
 
     def output(self):
         name1 = "我"
         file = str(self.qq) + ".html"
-        self.get_name()
         f2 = open(file, "w", encoding="utf-8")
         f2.write(
             "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>"
@@ -97,6 +125,8 @@ class QQoutput():
         allmsg = self.message()
         f2.write("<div style='white-space: pre-line'>")
         for msg in allmsg:
+            if not msg[2]:
+                continue
             try:
                 if (msg[1] == str(self.qq_self)):
                     f2.write("<p align='right'>")
@@ -119,16 +149,27 @@ class QQoutput():
                 pass
         f2.write("</div>")
 
+    def get_key(self):
+        self.unify_path()
+        kc_path = os.path.join(self.dir, "files", "kc")
+        kc_file = open(kc_path, "r")
+        return kc_file.read()
 
-def get_key(dir):
-    kc_path = os.path.join(dir, "f", "kc")
-    kc_file = open(kc_path, "r")
-    return kc_file.read()
+    def unify_path(self):
+        if os.path.isdir(os.path.join(self.dir, "f")):
+            os.rename(os.path.join(self.dir, "f"),
+                      os.path.join(self.dir, "files"))
+        if os.path.isdir(os.path.join(self.dir, "db")):
+            os.rename(os.path.join(self.dir, "db"),
+                      os.path.join(self.dir, "databases"))
+        if os.path.isfile(os.path.join(self.dir, "files", "kc")) == False:
+            raise OSError(
+                "File not found. Please report your directory layout.")
 
 
-def main(dir, qq_self, qq_oppo, mode):
+def main(dir, qq_self, qq, mode):
     try:
-        q = QQoutput(dir, qq_self, qq_oppo, mode)
+        q = QQoutput(dir, qq_self, qq, mode)
         q.output()
     except Exception as e:
         with open('log.txt', 'w') as f:
@@ -139,13 +180,5 @@ def main(dir, qq_self, qq_oppo, mode):
         print(traceback.format_exc())
         if (err_info):
             raise ValueError("QQ号/私聊群聊选择/db地址/错误")
-
-
-dir = "C:/Users/30857/Desktop/QQ_History/qq/apps/com.tencent.mobileqq"
-qq_self = "308571034"
-qq_oppo = "584740257"
-#qq = "939840382"
-key = "361910168"
-#msg = "还是在试表情"
-msg = ""
-main(dir, qq_self, qq_oppo, 1)
+        else:
+            raise BaseException("Error! See log.txt")

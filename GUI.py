@@ -9,18 +9,17 @@ import webbrowser
 
 
 def Enter():
-    dir, qq_self, qq_oppo = e1.get(), e2.get(), e3.get()
+    dir, qq_self, qq = e1.get(), e2.get(), e3.get()
     group = 1 if e4.get() == '私聊' else 2
-    if (dir == "" or qq_self == "" or qq_oppo == ""):
+    if (dir == "" or qq_self == "" or qq == ""):
         info.set("信息不完整！")
         return ()
     info.set("开始导出")
     try:
-        QQ_History.main(dir, qq_self, qq_oppo, group)
+        QQ_History.main(dir, qq_self, qq, group)
     except Exception as e:
         info.set(repr(e))
         return ()
-    info.set("完成")
 
 
 def SelectPath():
@@ -52,21 +51,21 @@ ttk.Label(root, text="*自己QQ号：").grid(row=1, column=0, sticky="e")
 e2 = ttk.Entry(root)
 e2.grid(row=1, column=1, columnspan=3, sticky="ew", pady=3)
 
-ttk.Label(root, text="*QQ号/群号：").grid(row=1, column=0, sticky="e")
+ttk.Label(root, text="*QQ号/群号：").grid(row=2, column=0, sticky="e")
 e3 = ttk.Entry(root)
-e3.grid(row=1, column=1, columnspan=3, sticky="ew", pady=3)
+e3.grid(row=2, column=1, columnspan=3, sticky="ew", pady=3)
 
-ttk.Label(root, text="私聊/群聊：").grid(row=6, column=0, sticky="e")
+ttk.Label(root, text="私聊/群聊：").grid(row=3, column=0, sticky="e")
 e4 = ttk.Combobox(root)
 e4['values'] = ('私聊', '群聊')
 e4.current(0)
-e4.grid(row=6, column=1, columnspan=3, sticky="ew", pady=3)
+e4.grid(row=3, column=1, columnspan=3, sticky="ew", pady=3)
 
 root.grid_columnconfigure(2, weight=1)
 
-ttk.Button(root, text="确认", command=Enter).grid(row=7, column=1)
+ttk.Button(root, text="确认", command=Enter).grid(row=4, column=1)
 l1 = ttk.Label(root, textvariable=info)
-l1.grid(row=7, column=1)
+l1.grid(row=4, column=1)
 
 tmp = open("tmp.png", "wb+")
 tmp.write(base64.b64decode(github_mark))
