@@ -9,26 +9,23 @@ import webbrowser
 
 
 def Enter():
-    db, qq, key, msg, n1, n2 = e1.get(), e2.get(), e3.get(), e4.get(), e5.get(
-    ), e6.get()
-    group = 1 if e7.get() == '私聊' else 2
-    if (db == "" or qq == "" or (key == "" and msg == "")):
+    dir, qq_self, qq_oppo = e1.get(), e2.get(), e3.get()
+    group = 1 if e4.get() == '私聊' else 2
+    if (dir == "" or qq_self == "" or qq_oppo == ""):
         info.set("信息不完整！")
         return ()
     info.set("开始导出")
     try:
-        realkey = QQ_History.main(db, qq, key, msg, n1, n2, group)
+        QQ_History.main(dir, qq_self, qq_oppo, group)
     except Exception as e:
         info.set(repr(e))
         return ()
-    if (key == ""):
-        keyGet.set(realkey)
     info.set("完成")
 
 
 def SelectPath():
-    pathTmp = filedialog.askopenfilename()
-    pathGet.set(pathTmp)
+    dir = filedialog.askdirectory()
+    pathGet.set(dir)
 
 
 def url():
@@ -46,35 +43,24 @@ os.remove("tmp.ico")
 
 root.title("QQ聊天记录导出")
 
-ttk.Label(root, text="*db文件地址：").grid(row=0, column=0, sticky="e")
+ttk.Label(root, text="*com.tencent.mobileqq：").grid(row=0, column=0, sticky="e")
 e1 = ttk.Entry(root, textvariable=pathGet)
 e1.grid(row=0, column=1)
 ttk.Button(root, text="选择", command=SelectPath, width=5).grid(row=0, column=3)
 
-ttk.Label(root, text="*对方QQ号：").grid(row=1, column=0, sticky="e")
+ttk.Label(root, text="*自己QQ号：").grid(row=1, column=0, sticky="e")
 e2 = ttk.Entry(root)
 e2.grid(row=1, column=1, columnspan=3, sticky="ew", pady=3)
 
-ttk.Label(root, text="手机识别码：").grid(row=2, column=0, sticky="e")
-e3 = ttk.Entry(root, textvariable=keyGet)
-e3.grid(row=2, column=1, columnspan=3, sticky="ew", pady=3)
-
-ttk.Label(root, text="最后一次聊天记录\n（至少六个汉字）").grid(row=3, column=0, sticky="e")
-e4 = ttk.Entry(root)
-e4.grid(row=3, column=1, columnspan=3, sticky="ew", pady=3)
-
-ttk.Label(root, text="我的名字：").grid(row=4, column=0, sticky="e")
-e5 = ttk.Entry(root)
-e5.grid(row=4, column=1, columnspan=3, sticky="ew", pady=3)
-ttk.Label(root, text="对方名字：").grid(row=5, column=0, sticky="e")
-e6 = ttk.Entry(root)
-e6.grid(row=5, column=1, columnspan=3, sticky="ew", pady=3)
+ttk.Label(root, text="*QQ号/群号：").grid(row=1, column=0, sticky="e")
+e3 = ttk.Entry(root)
+e3.grid(row=1, column=1, columnspan=3, sticky="ew", pady=3)
 
 ttk.Label(root, text="私聊/群聊：").grid(row=6, column=0, sticky="e")
-e7 = ttk.Combobox(root)
-e7['values'] = ('私聊', '群聊')
-e7.current(0)
-e7.grid(row=6, column=1, columnspan=3, sticky="ew", pady=3)
+e4 = ttk.Combobox(root)
+e4['values'] = ('私聊', '群聊')
+e4.current(0)
+e4.grid(row=6, column=1, columnspan=3, sticky="ew", pady=3)
 
 root.grid_columnconfigure(2, weight=1)
 
@@ -93,4 +79,4 @@ button_img.grid(row=6, rowspan=7, column=0, sticky="ws")
 
 root.mainloop()
 
-## pyinstaller -F -w -i icon.ico GUI.py
+# pyinstaller -F -w -i icon.ico GUI.py
