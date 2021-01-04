@@ -4,9 +4,9 @@
 
 ## 简介
 
-作为国内最常用的聊天工具之一，QQ 为了用户留存度，默认聊天记录备份无法脱离 QQ 被独立打开。本项目 fork 自大佬的项目[roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput) 在此非常感谢。因为改动较多，不再作为 fork 分支开发。
+作为国内最常用的聊天工具之一，QQ 为了用户留存度，默认聊天记录备份无法脱离 QQ 被独立打开。
 
-在之前版本的基础上完成了自动提取密钥解密的方法，自动填入备注/昵称，添加了QQ表情的一并导出，并制作了GUI方便使用。
+目前[版本](#致谢)往往需要自行编译，本方法在之前版本的基础上简化了操作，制作了GUI方便使用；并且不再需要提供密钥，自动填入备注/昵称，添加了QQ表情的一并导出。
 
 ## 获取聊天记录文件夹方法
 
@@ -52,3 +52,7 @@ data\data\com.tencent.mobileqq
 - [ ] add desensitization data to create e2e test
 - [ ] add Makefile, to run build/test
 - [ ] use pic in mobile folder, to better present result
+
+## 致谢
+1. [roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput)
+2. [WincerChan/export.py](https://gist.github.com/WincerChan/362331456a6e0417c5aa1cf3ff7be2b7)
