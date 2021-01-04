@@ -1,12 +1,12 @@
 # QQ聊天记录导出
 
-可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v2.0/QQ_History_Backup-v2.0.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1nbJcP5RVc1ID1IFGsN1-yQw)(i4cv) ，可直接运行。
+可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v2.1/QQ_History_Backup-v2.1.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1zp3Cg724B-Z65eJjGuKHVQ)(86y6) ，可直接运行。
 
 ## 简介
 
-本项目 fork 自大佬的项目[roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput) 在此非常感谢。因为改动较多，不再作为 fork 分支开发
+作为国内最常用的聊天工具之一，QQ 为了用户留存度，默认聊天记录备份无法脱离 QQ 被独立打开。本项目 fork 自大佬的项目[roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput) 在此非常感谢。因为改动较多，不再作为 fork 分支开发。
 
-在之前版本的基础上完成了自动提取密钥解密的方法，自动填入备注/昵称，添加了QQ表情的一并导出，并制作了GUI方便使用
+在之前版本的基础上完成了自动提取密钥解密的方法，自动填入备注/昵称，添加了QQ表情的一并导出，并制作了GUI方便使用。
 
 ## 获取聊天记录文件夹方法
 
@@ -21,33 +21,34 @@ data\data\com.tencent.mobileqq
 > 怎样导出手机中的QQ聊天记录？ - 益新软件的回答 - 知乎
 > https://www.zhihu.com/question/28574047/answer/964813560
 
-
 ## GUI使用方法
 
 ![GUI_image](./img/GUI.png)
 
 com.tencent.mobileqq：选择备份后的相应文件夹，一般为`apps/com.tencent.mobileqq`
+表情版本：默认为新版QQ表情。如果你的聊天记录来自很早以前（比如我），可以切换为旧版的表情
 
 ## 输出截图
 
-为了方便离线查看，qq表情gif选择保存在本地，注意移动聊天记录的时候需要同时移动gif文件
+为了方便离线查看，qq表情gif选择保存在本地，注意移动聊天记录的时候需要同时移动`emoticon`文件
 
 ![screenshot](./img/screenshot.png)
 
 有bug的话提issue，记得附上log.txt里的内容
 
-## v2.0 更新
+## v2 更新
 - 直接从 `files/kc` 提取明文的密钥，不用再手动输入或解密
 - 支持群聊记录导出
 - 支持 私聊/群聊 的 备注/昵称 自动填入
 - 支持 slowtable 的直接整合
+- 支持新版 QQ 表情
 
 ## TODO
 - [x] support troop message output
 - [x] use com.tencent.mobileqq/f/kc as key
 - [x] decode friend/troop name, to use in result
 - [x] auto-combine db and slow-table
-- [ ] update to new qq emoji
+- [x] update to new qq emoji
 - [ ] add desensitization data to create e2e test
 - [ ] add Makefile, to run build/test
 - [ ] use pic in mobile folder, to better present result

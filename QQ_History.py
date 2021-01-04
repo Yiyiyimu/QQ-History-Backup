@@ -4,19 +4,23 @@ import sqlite3
 import time
 import os
 import traceback
+import json
 
 
 class QQoutput():
-    def __init__(self, dir, qq_self, qq, mode):
+    def __init__(self, dir, qq_self, qq, mode, emoji):
         self.dir = dir
         self.key = self.get_key()  # 解密用的密钥
         db = os.path.join(dir, "databases", qq_self + ".db")
         self.c1 = sqlite3.connect(db).cursor()
         db = os.path.join(dir, "databases", "slowtable_" + qq_self + ".db")
         self.c2 = sqlite3.connect(db).cursor()
+
         self.qq_self = qq_self
         self.qq = qq
         self.mode = mode
+        self.emoji = emoji
+
         self.num_to_name = {}
 
     def decrypt(self, data):
@@ -39,13 +43,19 @@ class QQoutput():
         return NULL
 
     def add_emoji(self, msg):
+        emoji_map = self.map_new_emoji()
         pos = msg.find('\x14')
         while (pos != -1):
             lastpos = pos
             num = ord(msg[pos + 1])
+            index = emoji_map[str(num)]
+            if self.emoji == 1:
+                filename = "new/s" + index + ".png"
+            else:
+                filename = "old/" + index + ".gif"
             msg = msg.replace(
                 msg[pos:pos + 2],
-                "<img src='./gif/" + str(num) + ".gif' alt=" + str(num) + ">")
+                "<img src='./emoticon/" + filename + "' alt=" + index + ">")
             pos = msg.find('\x14')
             if (pos == lastpos):
                 break
@@ -109,10 +119,7 @@ class QQoutput():
             cursors.append(self.c2.execute(cmd))
         except:
             pass
-        try:
-            cursors.append(self.c1.execute(cmd))
-        except:
-            pass
+        cursors.append(self.c1.execute(cmd))
         return cursors
 
     def output(self):
@@ -166,10 +173,23 @@ class QQoutput():
             raise OSError(
                 "File not found. Please report your directory layout.")
 
+    def map_new_emoji(self):
+        with open('./emoticon/face_config.json', encoding='utf-8') as f:
+            emojis = json.load(f)
+        new_emoji_map = {}
 
-def main(dir, qq_self, qq, mode):
+        for e in emojis['sysface']:
+            if self.emoji == 1:
+                new_emoji_map[e["AQLid"]] = e["QSid"]
+            else:
+                if(len(e["EMCode"]) == 3):
+                    new_emoji_map[e["AQLid"]] = str(int(e["EMCode"])-100)
+        return new_emoji_map
+
+
+def main(dir, qq_self, qq, mode, emoji):
     try:
-        q = QQoutput(dir, qq_self, qq, mode)
+        q = QQoutput(dir, qq_self, qq, mode, emoji)
         q.output()
     except Exception as e:
         with open('log.txt', 'w') as f:
@@ -179,6 +199,6 @@ def main(dir, qq_self, qq, mode):
         err_info = repr(e).split(":")[0] == "OperationalError('no such table"
         print(traceback.format_exc())
         if (err_info):
-            raise ValueError("QQ号/私聊群聊选择/db地址/错误")
+            raise ValueError("信息填入错误")
         else:
             raise BaseException("Error! See log.txt")

@@ -11,15 +11,17 @@ import webbrowser
 def Enter():
     dir, qq_self, qq = e1.get(), e2.get(), e3.get()
     group = 1 if e4.get() == '私聊' else 2
+    emoji = 1 if e5.get() == '新' else 2
     if (dir == "" or qq_self == "" or qq == ""):
         info.set("信息不完整！")
         return ()
     info.set("开始导出")
     try:
-        QQ_History.main(dir, qq_self, qq, group)
+        QQ_History.main(dir, qq_self, qq, group, emoji)
+        info.set("完成")
     except Exception as e:
         info.set(repr(e))
-        return ()
+    return ()
 
 
 def SelectPath():
@@ -44,7 +46,7 @@ root.title("QQ聊天记录导出")
 
 ttk.Label(root, text="*com.tencent.mobileqq：").grid(row=0, column=0, sticky="e")
 e1 = ttk.Entry(root, textvariable=pathGet)
-e1.grid(row=0, column=1)
+e1.grid(row=0, column=1, columnspan=2, sticky="ew", pady=3)
 ttk.Button(root, text="选择", command=SelectPath, width=5).grid(row=0, column=3)
 
 ttk.Label(root, text="*自己QQ号：").grid(row=1, column=0, sticky="e")
@@ -61,11 +63,15 @@ e4['values'] = ('私聊', '群聊')
 e4.current(0)
 e4.grid(row=3, column=1, columnspan=3, sticky="ew", pady=3)
 
-root.grid_columnconfigure(2, weight=1)
+ttk.Label(root, text="表情版本：").grid(row=4, column=0, sticky="e")
+e5 = ttk.Combobox(root)
+e5['values'] = ('新', '旧')
+e5.current(0)
+e5.grid(row=4, column=1, columnspan=3, sticky="ew", pady=3)
 
-ttk.Button(root, text="确认", command=Enter).grid(row=4, column=1)
-l1 = ttk.Label(root, textvariable=info)
-l1.grid(row=4, column=1)
+root.grid_columnconfigure(2, weight=1)
+info.set("开始")
+ttk.Button(root, textvariable=info, command=Enter).grid(row=5, column=1)
 
 tmp = open("tmp.png", "wb+")
 tmp.write(base64.b64decode(github_mark))
@@ -74,8 +80,6 @@ github = tk.PhotoImage(file='tmp.png')
 os.remove("tmp.png")
 
 button_img = tk.Button(root, image=github, text='b', command=url, bd=0)
-button_img.grid(row=6, rowspan=7, column=0, sticky="ws")
+button_img.grid(row=5, rowspan=7, column=0, sticky="ws")
 
 root.mainloop()
-
-# pyinstaller -F -w -i icon.ico GUI.py
