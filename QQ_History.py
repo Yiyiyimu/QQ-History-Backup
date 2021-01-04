@@ -67,12 +67,12 @@ class QQoutput():
         num = self.qq.encode("utf-8")
         md5num = hashlib.md5(num).hexdigest().upper()
         if (self.mode == 1):
-            cmd = "select msgData,senderuin,time from mr_friend_{md5num}_New".format(
-                md5num=md5num)
+            cmd = "select msgData,senderuin,time from mr_friend_{}_New".format(
+                md5num)
             self.get_friends()
         else:
-            cmd = "select msgData,senderuin,time from mr_troop_{md5num}_New".format(
-                md5num=md5num)
+            cmd = "select msgData,senderuin,time from mr_troop_{}_New".format(
+                md5num)
             self.get_troop_members()
 
         cursors = self.fill_cursors(cmd)
@@ -86,11 +86,8 @@ class QQoutput():
                 ltime = time.localtime(row[2])
                 sendtime = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
 
-                amsg = []
-                amsg.append(sendtime)
-                amsg.append(self.decrypt(uin))
-                amsg.append(self.decrypt(msgdata))
-                allmsg.append(amsg)
+                allmsg.append(
+                    [sendtime, self.decrypt(uin), self.decrypt(msgdata)])
         return allmsg
 
     def get_friends(self):
@@ -115,6 +112,7 @@ class QQoutput():
 
     def fill_cursors(self, cmd):
         cursors = []
+        # slowtable might not contain related message, so just skip it
         try:
             cursors.append(self.c2.execute(cmd))
         except:
@@ -162,6 +160,7 @@ class QQoutput():
         kc_file = open(kc_path, "r")
         return kc_file.read()
 
+    # unify databases path of different phones
     def unify_path(self):
         if os.path.isdir(os.path.join(self.dir, "f")):
             os.rename(os.path.join(self.dir, "f"),
@@ -193,12 +192,11 @@ def main(dir, qq_self, qq, mode, emoji):
         q.output()
     except Exception as e:
         with open('log.txt', 'w') as f:
-            f.write(str(e))
+            f.write(repr(e))
             f.write(traceback.format_exc())
 
-        err_info = repr(e).split(":")[0] == "OperationalError('no such table"
         print(traceback.format_exc())
-        if (err_info):
+        if (repr(e).split(":")[0] == "OperationalError('no such table"):
             raise ValueError("信息填入错误")
         else:
             raise BaseException("Error! See log.txt")
