@@ -41,6 +41,7 @@ data\data\com.tencent.mobileqq
 - 需要额外的步骤
 - 手机连电脑 adb pull /sdcard/Andoird/data/com.tencent.mobileqq ./
 - 或者 找工具把这个路径放到和运行程序同目录 
+
 ![screenshot](./img/example_img.png)
   
 - 注：图片必须在手机上看过一次才有，因为QQ是看了才下载原图
