@@ -110,7 +110,9 @@ class QQoutput():
             return decode_mix_msg(msg)
         elif msg_type == -5008:
             return decode_share_url(msg)
-        return '[unknown msg_type {}]'.format(msg_type)
+        # for debug
+        # return '[unknown msg_type {}]'.format(msg_type)
+        return None
 
     def add_emoji(self, msg):
         pos = msg.find('\x14')
@@ -159,9 +161,11 @@ class QQoutput():
                 ltime = time.localtime(row[2])
                 sendtime = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
                 msg_type = row[3]
+                msg_final = self.decrypt(msgdata, msg_type)
+                if msg_final is None:
+                    continue
 
-                allmsg.append(
-                    [sendtime, msg_type, self.decrypt(uin), self.decrypt(msgdata, msg_type)])
+                allmsg.append([sendtime, msg_type, self.decrypt(uin), msg_final])
         return allmsg
 
     def get_friends(self):
