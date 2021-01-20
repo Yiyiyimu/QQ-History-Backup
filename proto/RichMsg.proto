@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+message ForwardExtra {
+  int32 forward_orgId = 1;
+  string forward_orgUin = 2;
+  int32 forward_orgUinType = 3;
+  string forward_orgUrl = 4;
+  string forward_thumbPath = 5;
+  int32 forward_orgFileSizeType = 6;
+}
+
+message PicRec {
+  string localPath = 1;
+  int32 size = 2;
+  int32 type = 3;
+  bool isRead = 4;
+  string uuid = 5;
+  string md5 = 6;
+  string serverStorageSource = 7;
+  string thumbMsgUrl = 8;
+  string bigMsgUrl = 9;
+  string rawMsgUrl = 10;
+  int32 fileSizeFlag = 11;
+  int32 uiOperatorFlag = 12;
+  ForwardExtra forwardInfo = 13;
+  int32 version = 14;
+  int32 isReport = 15;
+  uint64 groupFileID = 16;
+  string localUUID = 17;
+  int32 preDownState = 18;
+  int32 preDownNetwork = 19;
+  int32 previewed = 20;
+  uint32 uint32_thumb_width = 21;
+  uint32 uint32_thumb_height = 22;
+  uint32 uint32_width = 23;
+  uint32 uint32_height = 24;
+  uint32 uint32_image_type = 25;
+  uint32 uint32_show_len = 26;
+  uint32 uint32_download_len = 27;
+  uint32 uint32_current_len = 28;
+  uint32 notPreDownloadReason = 29;
+  bool enableEnc = 30;
+  string bigThumbMsgUrl = 31;
+  bytes bytes_pb_reserved = 32;
+  bool bool_story_pic_send_to_recent = 33;
+}
+message MarketFaceRec {
+
+}
+
+message Msg {
+  repeated Elem elems = 1;
+}
+
+message Elem {
+  bytes textMsg = 1;
+  bytes  picMsg = 2;
+  MarketFaceRec markfaceMsg = 3;
+  string sourceMsgInfo = 4;
+}
+
+message SafeMoreInfo {
+  string strMsgTxt = 1;
+  string strFromMobile = 2;
+  string strFromName = 3;
+}
+
+message Test {
+  string str = 16;
+}

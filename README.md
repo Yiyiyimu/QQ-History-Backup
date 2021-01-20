@@ -36,12 +36,23 @@ data\data\com.tencent.mobileqq
 
 有bug的话提issue，记得附上log.txt里的内容
 
+## 显示图片
+
+- 需要额外的步骤
+- 手机连电脑 adb pull /sdcard/Andoird/data/com.tencent.mobileqq ./
+- 或者 找工具把这个路径放到和运行程序同目录 
+
+![screenshot](./img/example_img.png)
+  
+- 注：图片必须在手机上看过一次才有，因为QQ是看了才下载原图
+
 ## v2 更新
 - 直接从 `files/kc` 提取明文的密钥，不用再手动输入或解密
 - 支持群聊记录导出
 - 支持 私聊/群聊 的 备注/昵称 自动填入
 - 支持 slowtable 的直接整合
 - 支持新版 QQ 表情
+- 20210120 支持图片
 
 ## TODO
 - [x] support troop message output
@@ -51,7 +62,10 @@ data\data\com.tencent.mobileqq
 - [x] update to new qq emoji
 - [ ] add desensitization data to create e2e test
 - [ ] add Makefile, to run build/test
-- [ ] use pic in mobile folder, to better present result
+- [x] use pic in mobile folder, to better present result
+- [ ] 支持图片缩略图的加载
+- [ ] 支持分享卡片消息
+- [ ] 提高图文消息显示兼容性
 
 ## 致谢
 1. [roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput)
