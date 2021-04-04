@@ -4,7 +4,7 @@ import time
 import os
 import traceback
 import json
-
+import base64
 
 _crc64_init = False
 _crc64_table = [0] * 256
@@ -31,6 +31,15 @@ def crc64(s):
 def join_file(*rel):
     return os.path.join(os.path.dirname(__file__), *rel)
 
+def get_base64_from_pic(path):
+    """Convert source image to base64 encoding
+    Args:
+        path: source of image
+    returns:
+        base64_string: base64 string for HTML image element
+    """
+    with open(path, "rb") as image_file:
+        return (b'data:image/png;base64,' + base64.b64encode(image_file.read())).decode("utf-8") 
 
 def decode_pic(data):
     from proto.RichMsg_pb2 import PicRec
@@ -44,7 +53,7 @@ def decode_pic(data):
         if os.path.exists(rel_path):
             w = 'auto' if doc.uint32_thumb_width == 0 else str(doc.uint32_thumb_width)
             h = 'auto' if doc.uint32_thumb_height == 0 else str(doc.uint32_thumb_height)
-            return '<img src="{}" width="{}" height="{}" />'.format(rel_path, w, h)
+            return '<img src="{}" width="{}" height="{}" />'.format(get_base64_from_pic(rel_path), w, h)
     except:
         pass
     return '[图片]'
@@ -127,7 +136,7 @@ class QQoutput():
                     filename = "old/" + index + ".gif"
                 msg = msg.replace(
                     msg[pos:pos + 2],
-                    '<img src="{}" alt="{}" />'.format(join_file('emoticon', filename), index))
+                    '<img src="{}" alt="{}" />'.format(get_base64_from_pic(join_file('emoticon', filename)), index))
             else:
                 msg = msg.replace(msg[pos:pos + 2], '[emoji:{}]'.format(str(num)))
             pos = msg.find('\x14')
