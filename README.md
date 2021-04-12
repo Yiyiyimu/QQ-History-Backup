@@ -30,7 +30,7 @@ data\data\com.tencent.mobileqq
 
 ## 输出截图
 
-为了方便离线查看，qq表情gif选择保存在本地，注意移动聊天记录的时候需要同时移动`emoticon`文件
+为了方便离线查看，emoji 已经集成到了输出的 `HTML` 文件中
 
 ![screenshot](./img/screenshot.png)
 
