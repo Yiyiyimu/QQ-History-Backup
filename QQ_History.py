@@ -5,6 +5,8 @@ import os
 import traceback
 import json
 import base64
+from proto.RichMsg_pb2 import PicRec
+from proto.RichMsg_pb2 import Elem
 
 _crc64_init = False
 _crc64_table = [0] * 256
@@ -28,31 +30,24 @@ def crc64(s):
     return v
 
 
-def join_file(*rel):
-    return os.path.join(os.path.dirname(__file__), *rel)
-
 def get_base64_from_pic(path):
-    """Convert source image to base64 encoding
-    Args:
-        path: source of image
-    returns:
-        base64_string: base64 string for HTML image element
-    """
     with open(path, "rb") as image_file:
-        return (b'data:image/png;base64,' + base64.b64encode(image_file.read())).decode("utf-8") 
+        return (b'data:image/png;base64,' + base64.b64encode(image_file.read())).decode("utf-8")
 
-def decode_pic(data):
-    from proto.RichMsg_pb2 import PicRec
+
+def decode_pic(data, img_path):
     try:
         doc = PicRec()
         doc.ParseFromString(data)
         url = 'chatimg:' + doc.md5
         filename = hex(crc64(url))
         filename = 'Cache_' + filename.replace('0x', '')
-        rel_path = join_file('com.tencent.mobileqq/Tencent/MobileQQ/chatpic/chatimg', filename[-3:], filename)
+        rel_path = os.path.join(img_path, filename[-3:], filename)
         if os.path.exists(rel_path):
-            w = 'auto' if doc.uint32_thumb_width == 0 else str(doc.uint32_thumb_width)
-            h = 'auto' if doc.uint32_thumb_height == 0 else str(doc.uint32_thumb_height)
+            w = 'auto' if doc.uint32_thumb_width == 0 else str(
+                doc.uint32_thumb_width)
+            h = 'auto' if doc.uint32_thumb_height == 0 else str(
+                doc.uint32_thumb_height)
             return '<img src="{}" width="{}" height="{}" />'.format(get_base64_from_pic(rel_path), w, h)
     except:
         pass
@@ -60,7 +55,6 @@ def decode_pic(data):
 
 
 def decode_mix_msg(data):
-    from proto.RichMsg_pb2 import Elem
     try:
         doc = Elem()
         doc.ParseFromString(data)
@@ -79,8 +73,8 @@ def decode_share_url(msg):
 
 
 class QQoutput():
-    def __init__(self, path, qq_self, qq, mode, emoji):
-        self.dir = path
+    def __init__(self, path, qq_self, qq, mode, emoji, img_path):
+        self.db_path = path
         self.key = self.get_key()  # 解密用的密钥
         db = os.path.join(path, "databases", qq_self + ".db")
         self.c1 = sqlite3.connect(db).cursor()
@@ -91,6 +85,7 @@ class QQoutput():
         self.qq = qq
         self.mode = mode
         self.emoji = emoji
+        self.img_path = img_path
 
         self.num_to_name = {}
         self.emoji_map = self.map_new_emoji()
@@ -114,7 +109,7 @@ class QQoutput():
                 pass
                 return '[decode error]'
         elif msg_type == -2000:
-            return decode_pic(msg)
+            return decode_pic(msg, self.img_path)
         elif msg_type == -1035:
             return decode_mix_msg(msg)
         elif msg_type == -5008:
@@ -136,9 +131,10 @@ class QQoutput():
                     filename = "old/" + index + ".gif"
                 msg = msg.replace(
                     msg[pos:pos + 2],
-                    '<img src="{}" alt="{}" />'.format(get_base64_from_pic(join_file('emoticon', filename)), index))
+                    '<img src="{}" alt="{}" />'.format(get_base64_from_pic(os.path.join('emoticon', filename)), index))
             else:
-                msg = msg.replace(msg[pos:pos + 2], '[emoji:{}]'.format(str(num)))
+                msg = msg.replace(msg[pos:pos + 2],
+                                  '[emoji:{}]'.format(str(num)))
             pos = msg.find('\x14')
             if pos == lastpos:
                 break
@@ -174,7 +170,8 @@ class QQoutput():
                 if msg_final is None:
                     continue
 
-                allmsg.append([sendtime, msg_type, self.decrypt(uin), msg_final])
+                allmsg.append(
+                    [sendtime, msg_type, self.decrypt(uin), msg_final])
         return allmsg
 
     def get_friends(self):
@@ -216,7 +213,7 @@ class QQoutput():
         )
         allmsg = self.message()
         f2.write("<div style='white-space: pre-line'>")
-        for ts, msg_type, uid, msg in allmsg:
+        for ts, _, uid, msg in allmsg:
             if not msg:
                 continue
             if uid == str(self.qq_self):
@@ -240,24 +237,24 @@ class QQoutput():
 
     def get_key(self):
         self.unify_path()
-        kc_path = os.path.join(self.dir, "files", "kc")
+        kc_path = os.path.join(self.db_path, "files", "kc")
         kc_file = open(kc_path, "r")
         return kc_file.read()
 
     # unify databases path of different phones
     def unify_path(self):
-        if os.path.isdir(os.path.join(self.dir, "f")):
-            os.rename(os.path.join(self.dir, "f"),
-                      os.path.join(self.dir, "files"))
-        if os.path.isdir(os.path.join(self.dir, "db")):
-            os.rename(os.path.join(self.dir, "db"),
-                      os.path.join(self.dir, "databases"))
-        if not os.path.isfile(os.path.join(self.dir, "files", "kc")):
+        if os.path.isdir(os.path.join(self.db_path, "f")):
+            os.rename(os.path.join(self.db_path, "f"),
+                      os.path.join(self.db_path, "files"))
+        if os.path.isdir(os.path.join(self.db_path, "db")):
+            os.rename(os.path.join(self.db_path, "db"),
+                      os.path.join(self.db_path, "databases"))
+        if not os.path.isfile(os.path.join(self.db_path, "files", "kc")):
             raise OSError(
                 "File not found. Please report your directory layout.")
 
     def map_new_emoji(self):
-        with open(join_file('./emoticon/face_config.json'), encoding='utf-8') as f:
+        with open('./emoticon/face_config.json', encoding='utf-8') as f:
             emojis = json.load(f)
         new_emoji_map = {}
 
@@ -270,9 +267,9 @@ class QQoutput():
         return new_emoji_map
 
 
-def main(path, qq_self, qq, mode, emoji):
+def main(db_path, qq_self, qq, mode, emoji, img_path):
     try:
-        q = QQoutput(path, qq_self, qq, mode, emoji)
+        q = QQoutput(db_path, qq_self, qq, mode, emoji, img_path)
         q.output()
     except Exception as e:
         with open('log.txt', 'w') as f:
@@ -284,3 +281,12 @@ def main(path, qq_self, qq, mode, emoji):
             raise ValueError("信息填入错误")
         else:
             raise BaseException("Error! See log.txt")
+
+
+db_path = "C:/Users/30857/Desktop/qq备份/apps/com.tencent.mobileqq/"
+qq_self = "308571034"
+qq = "939840382"
+mode = 2
+emoji = 1
+img_path = "C:/Users/30857/Desktop/qq备份/chatpic/chatimg"
+main(db_path, qq_self, qq, mode, emoji, img_path)
