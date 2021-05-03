@@ -1,25 +1,27 @@
 # QQ聊天记录导出
 
-可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v2.1/QQ_History_Backup-v2.1.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1zp3Cg724B-Z65eJjGuKHVQ)(86y6) ，可直接运行。
+可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v2.2/QQ_History_Backup-v2.2.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1Qit4IRfZdCzJ88n6sfONCg)(ovxt) ，可直接运行。
 
 ## 简介
 
 作为国内最常用的聊天工具之一，QQ 为了用户留存度，默认聊天记录备份无法脱离 QQ 被独立打开。
 
-目前[版本](#致谢)往往需要自行编译，本方法在之前版本的基础上简化了操作，制作了GUI方便使用；并且不再需要提供密钥，自动填入备注/昵称，添加了QQ表情的一并导出。
+目前[版本](#致谢)往往需要自行编译，本方法在之前版本的基础上简化了操作，制作了GUI方便使用；并且不再需要提供密钥，自动填入备注/昵称，添加了QQ表情和图片的一并导出。
 
 ## 获取聊天记录文件夹方法
 
-如果root了，直接在以下地址就可以找到。建议压缩文件夹后复制导出。
+如果手机root，聊天记录可在以下地址找到。因为小文件较多建议压缩文件夹后复制导出。
 
 ```
 data\data\com.tencent.mobileqq
 ```
 
-如果没有root，可以通过手机自带的备份工具备份整个QQ软件，具体方法可以参见
+如果没有root，可以通过手机自带的备份工具备份整个QQ，具体方法可以参见
 
 > 怎样导出手机中的QQ聊天记录？ - 益新软件的回答 - 知乎
 > https://www.zhihu.com/question/28574047/answer/964813560
+
+如果同时需要在聊天记录中显示图片，拷贝手机中 `Android/data/com.tencent.mobileqq/Tencent/MobileQQ/chatpic/chatimg` 至 `GUI.exe` 同一文件夹中
 
 ## GUI使用方法
 
@@ -27,24 +29,18 @@ data\data\com.tencent.mobileqq
 
 - com.tencent.mobileqq：选择备份后的相应文件夹，一般为`apps/com.tencent.mobileqq`
 - 表情版本：默认为新版QQ表情。如果你的聊天记录来自很早以前（比如我），可以切换为旧版的表情
+- 单一文件：默认为否
+  - 不启用单一文件好处在于：1. 使导出的 HTML 文件具有可读性；2. 减小 HTML 文件体积方便打开
+  - 启用单一文件好处：拷贝时不需要和 `emoticon` 以及 `chatimg` 文件夹一起拷贝，更加方便
 
 ## 输出截图
 
-为了方便离线查看，emoji 已经集成到了输出的 `HTML` 文件中
+![screenshot](./img/layout.png)
+![screenshot](./img/images.png)
 
-![screenshot](./img/screenshot.png)
+如果没有启用单一文件，拷贝生成的聊天记录时需要一起拷贝 `emoticon` 以及 `chatimg` 文件夹.
 
-有bug的话提issue，记得附上log.txt里的内容
-
-## 显示图片
-
-- 需要额外的步骤
-- 手机连电脑 adb pull /sdcard/Andoird/data/com.tencent.mobileqq ./
-- 或者 找工具把这个路径放到和运行程序同目录 
-
-![screenshot](./img/example_img.png)
-  
-- 注：图片必须在手机上看过一次才有，因为QQ是看了才下载原图
+有bug的话提issue，记得附上log.txt里的内容。
 
 ## v2 更新
 - 直接从 `files/kc` 提取明文的密钥，不用再手动输入或解密
@@ -52,7 +48,10 @@ data\data\com.tencent.mobileqq
 - 支持 私聊/群聊 的 备注/昵称 自动填入
 - 支持 slowtable 的直接整合
 - 支持新版 QQ 表情
-- 20210120 支持图片
+
+## v2.2 更新
+- 支持导出图片至聊天记录
+- 支持合并图片至单一文件方便传输
 
 ## TODO
 - [x] support troop message output
@@ -60,12 +59,12 @@ data\data\com.tencent.mobileqq
 - [x] decode friend/troop name, to use in result
 - [x] auto-combine db and slow-table
 - [x] update to new qq emoji
+- [x] use pic in mobile folder, to better present result
+- [ ] export voicelines
 - [ ] add desensitization data to create e2e test
 - [ ] add Makefile, to run build/test
-- [x] use pic in mobile folder, to better present result
-- [ ] 支持图片缩略图的加载
-- [ ] 支持分享卡片消息
-- [ ] 提高图文消息显示兼容性
+- [ ] support thumbnail images
+- [ ] support sharing cards
 
 ## 致谢
 1. [roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput)

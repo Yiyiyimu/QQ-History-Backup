@@ -9,15 +9,18 @@ import webbrowser
 
 
 def Enter():
-    db_path, qq_self, qq, img_path = e1.get(), e2.get(), e3.get(), e6.get()
+    db_path, qq_self, qq = e1.get(), e2.get(), e3.get()
     group = 1 if e4.get() == '私聊' else 2
     emoji = 1 if e5.get() == '新' else 2
+    with_img = True if e6.get() == '是' else False
+    combine_img = True if e7.get() == '否' else False
     if (db_path == "" or qq_self == "" or qq == ""):
         info.set("信息不完整！")
         return ()
     info.set("开始导出")
     try:
-        QQ_History.main(db_path, qq_self, qq, group, emoji, img_path)
+        QQ_History.main(db_path, qq_self, qq, group,
+                        emoji, with_img, combine_img)
         info.set("完成")
     except Exception as e:
         info.set(repr(e))
@@ -76,15 +79,21 @@ e5['values'] = ('新', '旧')
 e5.current(0)
 e5.grid(row=4, column=1, columnspan=3, sticky="ew", pady=3)
 
-ttk.Label(root, text="chatimg：").grid(row=5, column=0, sticky="e")
-e6 = ttk.Entry(root, textvariable=img_path_get)
-e6.grid(row=5, column=1, columnspan=2, sticky="ew", pady=3)
-ttk.Button(root, text="选择", command=SelectImgPath,
-           width=5).grid(row=5, column=3)
+ttk.Label(root, text="导出图片：").grid(row=5, column=0, sticky="e")
+e6 = ttk.Combobox(root)
+e6['values'] = ('是', '否')
+e6.current(0)
+e6.grid(row=5, column=1, columnspan=3, sticky="ew", pady=3)
+
+ttk.Label(root, text="合并图片：").grid(row=6, column=0, sticky="e")
+e7 = ttk.Combobox(root)
+e7['values'] = ('否', '是')
+e7.current(0)
+e7.grid(row=6, column=1, columnspan=3, sticky="ew", pady=3)
 
 root.grid_columnconfigure(2, weight=1)
 info.set("开始")
-ttk.Button(root, textvariable=info, command=Enter).grid(row=6, column=1)
+ttk.Button(root, textvariable=info, command=Enter).grid(row=7, column=1)
 
 tmp = open("tmp.png", "wb+")
 tmp.write(base64.b64decode(github_mark))
@@ -93,6 +102,6 @@ github = tk.PhotoImage(file='tmp.png')
 os.remove("tmp.png")
 
 button_img = tk.Button(root, image=github, text='b', command=url, bd=0)
-button_img.grid(row=6, rowspan=7, column=0, sticky="ws")
+button_img.grid(row=7, rowspan=7, column=0, sticky="ws")
 
 root.mainloop()

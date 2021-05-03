@@ -4,6 +4,7 @@
 *.db-shm
 *.db-wal
 *.zip
+*.exe
 *.spec
 build/
 dist/
@@ -11,3 +12,4 @@ __pycache__/
 qq/
 QQ*/
 com.tencent.mobileqq/
+chatimg/

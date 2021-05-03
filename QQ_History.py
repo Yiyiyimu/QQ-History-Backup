@@ -30,50 +30,8 @@ def crc64(s):
     return v
 
 
-def get_base64_from_pic(path):
-    with open(path, "rb") as image_file:
-        return (b'data:image/png;base64,' + base64.b64encode(image_file.read())).decode("utf-8")
-
-
-def decode_pic(data, img_path):
-    try:
-        doc = PicRec()
-        doc.ParseFromString(data)
-        url = 'chatimg:' + doc.md5
-        filename = hex(crc64(url))
-        filename = 'Cache_' + filename.replace('0x', '')
-        rel_path = os.path.join(img_path, filename[-3:], filename)
-        if os.path.exists(rel_path):
-            w = 'auto' if doc.uint32_thumb_width == 0 else str(
-                doc.uint32_thumb_width)
-            h = 'auto' if doc.uint32_thumb_height == 0 else str(
-                doc.uint32_thumb_height)
-            return '<img src="{}" width="{}" height="{}" />'.format(get_base64_from_pic(rel_path), w, h)
-    except:
-        pass
-    return '[图片]'
-
-
-def decode_mix_msg(data):
-    try:
-        doc = Elem()
-        doc.ParseFromString(data)
-        img_src = ''
-        if doc.picMsg:
-            img_src = decode_pic(doc.picMsg)
-        return img_src + doc.textMsg.decode('utf-8')
-    except:
-        pass
-    return '[混合消息]'
-
-
-def decode_share_url(msg):
-    # TODO
-    return '[分享卡片]'
-
-
 class QQoutput():
-    def __init__(self, path, qq_self, qq, mode, emoji, img_path):
+    def __init__(self, path, qq_self, qq, mode, emoji, with_img, combine_img):
         self.db_path = path
         self.key = self.get_key()  # 解密用的密钥
         db = os.path.join(path, "databases", qq_self + ".db")
@@ -85,7 +43,8 @@ class QQoutput():
         self.qq = qq
         self.mode = mode
         self.emoji = emoji
-        self.img_path = img_path
+        self.with_img = with_img
+        self.combine_img = combine_img
 
         self.num_to_name = {}
         self.emoji_map = self.map_new_emoji()
@@ -101,6 +60,7 @@ class QQoutput():
             for i in range(0, len(data)):
                 msg += chr(ord(data[i]) ^ ord(self.key[i % len(self.key)]))
             return msg
+
         if msg_type == -1000:
             try:
                 return msg.decode('utf-8')
@@ -108,12 +68,15 @@ class QQoutput():
                 # print(msg)
                 pass
                 return '[decode error]'
+
+        if not self.with_img:
+            return None
         elif msg_type == -2000:
-            return decode_pic(msg, self.img_path)
+            return self.decode_pic(msg)
         elif msg_type == -1035:
-            return decode_mix_msg(msg)
+            return self.decode_mix_msg(msg)
         elif msg_type == -5008:
-            return decode_share_url(msg)
+            return self.decode_share_url(msg)
         # for debug
         # return '[unknown msg_type {}]'.format(msg_type)
         return None
@@ -125,13 +88,18 @@ class QQoutput():
             num = ord(msg[pos + 1])
             if str(num) in self.emoji_map:
                 index = self.emoji_map[str(num)]
+
                 if self.emoji == 1:
                     filename = "new/s" + index + ".png"
                 else:
                     filename = "old/" + index + ".gif"
+
+                emoticon_path = os.path.join('emoticon', filename)
+                if self.combine_img:
+                    emoticon_path = self.get_base64_from_pic(emoticon_path)
+
                 msg = msg.replace(
-                    msg[pos:pos + 2],
-                    '<img src="{}" alt="{}" />'.format(get_base64_from_pic(os.path.join('emoticon', filename)), index))
+                    msg[pos:pos + 2], '<img src="{}" alt="{}" />'.format(emoticon_path, index))
             else:
                 msg = msg.replace(msg[pos:pos + 2],
                                   '[emoji:{}]'.format(str(num)))
@@ -266,10 +234,50 @@ class QQoutput():
                     new_emoji_map[e["AQLid"]] = str(int(e["EMCode"]) - 100)
         return new_emoji_map
 
+    def get_base64_from_pic(self, path):
+        with open(path, "rb") as image_file:
+            return (b'data:image/png;base64,' + base64.b64encode(image_file.read())).decode("utf-8")
 
-def main(db_path, qq_self, qq, mode, emoji, img_path):
+    def decode_pic(self, data):
+        try:
+            doc = PicRec()
+            doc.ParseFromString(data)
+            url = 'chatimg:' + doc.md5
+            filename = hex(crc64(url))
+            filename = 'Cache_' + filename.replace('0x', '')
+            rel_path = os.path.join("./chatimg/", filename[-3:], filename)
+            if os.path.exists(rel_path):
+                w = 'auto' if doc.uint32_thumb_width == 0 else str(
+                    doc.uint32_thumb_width)
+                h = 'auto' if doc.uint32_thumb_height == 0 else str(
+                    doc.uint32_thumb_height)
+                if self.combine_img:
+                    rel_path = self.get_base64_from_pic(rel_path)
+                return '<img src="{}" width="{}" height="{}" />'.format(rel_path, w, h)
+        except:
+            pass
+        return '[图片]'
+
+    def decode_mix_msg(self, data):
+        try:
+            doc = Elem()
+            doc.ParseFromString(data)
+            img_src = ''
+            if doc.picMsg:
+                img_src = self.decode_pic(doc.picMsg)
+            return img_src + doc.textMsg.decode('utf-8')
+        except:
+            pass
+        return '[混合消息]'
+
+    def decode_share_url(self, msg):
+        # TODO
+        return '[分享卡片]'
+
+
+def main(db_path, qq_self, qq, mode, emoji, with_img, combine_img):
     try:
-        q = QQoutput(db_path, qq_self, qq, mode, emoji, img_path)
+        q = QQoutput(db_path, qq_self, qq, mode, emoji, with_img, combine_img)
         q.output()
     except Exception as e:
         with open('log.txt', 'w') as f:
@@ -281,12 +289,3 @@ def main(db_path, qq_self, qq, mode, emoji, img_path):
             raise ValueError("信息填入错误")
         else:
             raise BaseException("Error! See log.txt")
-
-
-db_path = "C:/Users/30857/Desktop/qq备份/apps/com.tencent.mobileqq/"
-qq_self = "308571034"
-qq = "939840382"
-mode = 2
-emoji = 1
-img_path = "C:/Users/30857/Desktop/qq备份/chatpic/chatimg"
-main(db_path, qq_self, qq, mode, emoji, img_path)
