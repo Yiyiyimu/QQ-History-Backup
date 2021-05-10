@@ -3,7 +3,7 @@
 
 # QQ聊天记录导出
 
-可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v2.2.1/QQ_History_Backup-v2.2.1.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1Qit4IRfZdCzJ88n6sfONCg)(ovxt) ，可直接运行。
+可执行文件[Github下载链接](https://github.com/Yiyiyimu/QQ_History_Backup/releases/download/v2.2.1/QQ_History_Backup-v2.2.1.zip)，[百度网盘下载链接](https://pan.baidu.com/s/1DEDW0xs8KOL-LYovqWJmhg)(42y8) ，可直接运行。
 
 ## 简介
 
