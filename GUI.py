@@ -13,7 +13,7 @@ def Enter():
     group = 1 if e4.get() == '私聊' else 2
     emoji = 1 if e5.get() == '新' else 2
     with_img = True if e6.get() == '是' else False
-    combine_img = True if e7.get() == '否' else False
+    combine_img = True if e7.get() == '是' else False
     if (db_path == "" or qq_self == "" or qq == ""):
         info.set("信息不完整！")
         return ()
@@ -87,8 +87,8 @@ e6.grid(row=5, column=1, columnspan=3, sticky="ew", pady=3)
 
 ttk.Label(root, text="合并图片：").grid(row=6, column=0, sticky="e")
 e7 = ttk.Combobox(root)
-e7['values'] = ('否', '是')
-e7.current(0)
+e7['values'] = ('是', '否')
+e7.current(1)
 e7.grid(row=6, column=1, columnspan=3, sticky="ew", pady=3)
 
 root.grid_columnconfigure(2, weight=1)
