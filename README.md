@@ -32,16 +32,16 @@ data\data\com.tencent.mobileqq
 
 - com.tencent.mobileqq：选择备份后的相应文件夹，一般为`apps/com.tencent.mobileqq`
 - 表情版本：默认为新版QQ表情。如果你的聊天记录来自很早以前（比如我），可以切换为旧版的表情
-- 单一文件：默认为否
-  - 不启用单一文件好处在于：1. 使导出的 HTML 文件具有可读性；2. 减小 HTML 文件体积方便打开
-  - 启用单一文件好处：拷贝时不需要和 `emoticon` 以及 `chatimg` 文件夹一起拷贝，更加方便
+- 合并图片：默认为否
+  - 不启用合并图片好处在于：1. 使导出的 HTML 文件具有可读性；2. 减小 HTML 文件体积方便打开
+  - 启用合并图片好处：拷贝时不需要和 `emoticon` 以及 `chatimg` 文件夹一起拷贝，更加方便
 
 ## 输出截图
 
 ![screenshot](./img/layout.png)
 ![screenshot](./img/images.png)
 
-如果没有启用单一文件，拷贝生成的聊天记录时需要一起拷贝 `emoticon` 以及 `chatimg` 文件夹.
+如果没有启用合并图片，拷贝生成的聊天记录时需要一起拷贝 `emoticon` 以及 `chatimg` 文件夹.
 
 有bug的话提issue，记得附上log.txt里的内容。
 
