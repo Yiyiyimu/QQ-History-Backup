@@ -114,11 +114,11 @@ class QQoutput():
         num = self.qq.encode("utf-8")
         md5num = hashlib.md5(num).hexdigest().upper()
         if self.mode == 1:
-            cmd = "select msgData,senderuin,time,msgtype from mr_friend_{}_New".format(
+            cmd = "select msgData,senderuin,time,msgtype from mr_friend_{}_New order by time".format(
                 md5num)
             self.get_friends()
         else:
-            cmd = "select msgData,senderuin,time,msgtype from mr_troop_{}_New".format(
+            cmd = "select msgData,senderuin,time,msgtype from mr_troop_{}_New order by time".format(
                 md5num)
             # print('Groups {} -> {}'.format(num, md5num))
             self.get_troop_members()
