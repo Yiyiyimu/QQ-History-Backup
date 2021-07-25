@@ -61,7 +61,7 @@ class QQoutput():
                 msg += chr(ord(data[i]) ^ ord(self.key[i % len(self.key)]))
             return msg
 
-        if msg_type == -1000 or -1049 or -1051:
+        if msg_type == -1000 or msg_type == -1049 or msg_type == -1051:
             try:
                 return msg.decode('utf-8')
             except:
