@@ -7,6 +7,7 @@ import json
 import base64
 from proto.RichMsg_pb2 import PicRec
 from proto.RichMsg_pb2 import Elem
+from proto.RichMsg_pb2 import Msg
 
 _crc64_init = False
 _crc64_table = [0] * 256
@@ -262,12 +263,15 @@ class QQoutput():
 
     def decode_mix_msg(self, data):
         try:
-            doc = Elem()
+            doc = Msg()
             doc.ParseFromString(data)
-            img_src = ''
-            if doc.picMsg:
-                img_src = self.decode_pic(doc.picMsg)
-            return img_src + doc.textMsg.decode('utf-8')
+            message = ''
+            for elem in doc.elems:
+                if elem.picMsg:
+                    message += self.decode_pic(elem.picMsg)
+                else:
+                    message += elem.textMsg.decode('utf-8')
+            return message
         except:
             pass
         return '[混合消息]'
