@@ -77,6 +77,8 @@ class QQoutput():
             return self.decode_mix_msg(msg)
         elif msg_type == -5008:
             return self.decode_share_url(msg)
+        elif msg_type == -5012 or msg_type == -5018:
+            return '[戳一戳]'
         # for debug
         # return '[unknown msg_type {}]'.format(msg_type)
         return None
