@@ -1,4 +1,5 @@
 [![](https://img.shields.io/github/downloads/yiyiyimu/qq_history_backup/total?style=flat-square)]()
+[![](https://img.shields.io/badge/BaiduYun--downloads-1.7k-brightgreen?style=flat-square)]()
 
 
 # QQ聊天记录导出
@@ -9,7 +10,7 @@
 
 作为国内最常用的聊天工具之一，QQ 为了用户留存度，默认聊天记录备份无法脱离 QQ 被独立打开。
 
-目前[版本](#致谢)往往需要自行编译，本方法在之前版本的基础上简化了操作，制作了GUI方便使用；并且不再需要提供密钥，自动填入备注/昵称，添加了QQ表情和图片的一并导出。
+目前版本往往需要自行编译，本方法在之前版本的基础上简化了操作，制作了GUI方便使用；并且不再需要提供密钥，自动填入备注/昵称，添加了QQ表情和图片的一并导出。
 
 ## 获取聊天记录文件夹方法
 
@@ -59,17 +60,18 @@ data\data\com.tencent.mobileqq
 - 支持合并图片至单一文件方便传输
 
 ## TODO
-- [x] support troop message output
-- [x] use com.tencent.mobileqq/f/kc as key
-- [x] decode friend/troop name, to use in result
-- [x] auto-combine db and slow-table
-- [x] update to new qq emoji
-- [x] use pic in mobile folder, to better present result
-- [ ] export voicelines
-- [ ] add desensitization data to create e2e test
-- [ ] add Makefile, to run build/test
-- [ ] support thumbnail images
-- [ ] support sharing cards
+- [x] 支持群聊导出
+- [x] 支持自动查找密钥
+- [x] 使用好友/群聊昵称作为默认用户名
+- [x] 自动合并 db 和 slow-table
+- [x] 支持新 QQ emoji
+- [x] 支持单一文件导出
+- [ ] 支持视频导出
+- [ ] 支持音频导出
+- [ ] 使用脱敏文件作为 e2e 测试
+- [ ] 添加 Makefile 自动化 build/test
+- [ ] 支持缩略图
+- [ ] 支持卡片分享
 
 
 ## FAQ
