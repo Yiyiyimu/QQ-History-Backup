@@ -1,5 +1,5 @@
 [![](https://img.shields.io/github/downloads/yiyiyimu/qq_history_backup/total?style=flat-square)]()
-[![](https://img.shields.io/badge/BaiduYun--downloads-1.7k-brightgreen?style=flat-square)]()
+[![](https://img.shields.io/badge/BaiduYun--downloads-3.2k-brightgreen?style=flat-square)]()
 
 
 # QQ聊天记录导出
@@ -48,17 +48,6 @@ data\data\com.tencent.mobileqq
 
 有bug的话提issue，记得附上log.txt里的内容。
 
-## v2 更新
-- 直接从 `files/kc` 提取明文的密钥，不用再手动输入或解密
-- 支持群聊记录导出
-- 支持 私聊/群聊 的 备注/昵称 自动填入
-- 支持 slowtable 的直接整合
-- 支持新版 QQ 表情
-
-## v2.2 更新
-- 支持导出图片至聊天记录
-- 支持合并图片至单一文件方便传输
-
 ## TODO
 - [x] 支持群聊导出
 - [x] 支持自动查找密钥
@@ -66,6 +55,7 @@ data\data\com.tencent.mobileqq
 - [x] 自动合并 db 和 slow-table
 - [x] 支持新 QQ emoji
 - [x] 支持单一文件导出
+- [ ] 支持 iOS 导出
 - [ ] 支持视频导出
 - [ ] 支持音频导出
 - [ ] 使用脱敏文件作为 e2e 测试
@@ -78,6 +68,18 @@ data\data\com.tencent.mobileqq
 - **聊天记录中显示 `[图片]` 是因为什么？**
 
    解码出的图片路径在 `chatimg` 找不到相应文件。可能原因为在手机中没有加载过该文件，导致图片没有存在手机里。
+
+## CHANGELOG
+### v2
+- 直接从 `files/kc` 提取明文的密钥，不用再手动输入或解密
+- 支持群聊记录导出
+- 支持 私聊/群聊 的 备注/昵称 自动填入
+- 支持 slowtable 的直接整合
+- 支持新版 QQ 表情
+
+### v2.2
+- 支持导出图片至聊天记录
+- 支持合并图片至单一文件方便传输
 
 ## 致谢
 1. [roadwide/qqmessageoutput](https://github.com/roadwide/qqmessageoutput)
