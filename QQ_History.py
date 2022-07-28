@@ -8,6 +8,7 @@ import base64
 from proto.RichMsg_pb2 import PicRec
 from proto.RichMsg_pb2 import Elem
 from proto.RichMsg_pb2 import Msg
+from html import escape
 
 _crc64_init = False
 _crc64_table = [0] * 256
@@ -201,7 +202,7 @@ class QQoutput():
                 f2.write("</b></font>-----<font color=\"green\">")
                 f2.write(ts)
                 f2.write("</font></br>")
-            f2.write(self.add_emoji(msg))
+            f2.write(escape(self.add_emoji(msg)))
             f2.write("</br></br>")
             f2.write("</p>")
         f2.write("</div>")
